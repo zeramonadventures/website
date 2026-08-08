@@ -43,13 +43,6 @@
   .loader-core{ width:150px; height:150px; position:relative; }
   .loader-core svg{ width:100%; height:100%; overflow:visible; }
 
-  .orbit-ring{
-    fill:none; stroke:rgba(123,215,255,0.25); stroke-width:1;
-  }
-  .orbit-dot{
-    fill:var(--ice);
-    filter:drop-shadow(0 0 6px var(--ice));
-  }
   .core-hex{
     fill:none; stroke:var(--blue-light); stroke-width:3;
     stroke-dasharray:520; stroke-dashoffset:520;
@@ -64,8 +57,6 @@
   }
   @keyframes draw-hex{ to{ stroke-dashoffset:0; } }
 
-  .orbit-group{ transform-origin:75px 75px; animation: spin 6s linear infinite; opacity:0; animation: spin 6s linear infinite, fade-in .6s ease 1.1s forwards; }
-  @keyframes spin{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
   @keyframes fade-in{ to{ opacity:1; } }
 
   .loader-word{
