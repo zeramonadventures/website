@@ -49,6 +49,40 @@
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
 
+  // Live Roblox game stats (visits, active players, likes)
+  const PLACE_ID = '97770628016535';
+
+  async function fetchGameStats(){
+    try {
+      const universeRes = await fetch(`https://apis.roproxy.com/universes/v1/places/${PLACE_ID}/universe`);
+      if (!universeRes.ok) throw new Error('universe lookup failed');
+      const universeData = await universeRes.json();
+      const universeId = universeData.universeId;
+
+      const [gameRes, votesRes] = await Promise.all([
+        fetch(`https://games.roproxy.com/v1/games?universeIds=${universeId}`),
+        fetch(`https://games.roproxy.com/v1/games/votes?universeIds=${universeId}`)
+      ]);
+      if (!gameRes.ok || !votesRes.ok) throw new Error('game data fetch failed');
+
+      const gameData = await gameRes.json();
+      const votesData = await votesRes.json();
+      const info = gameData.data && gameData.data[0];
+      const votes = votesData.data && votesData.data[0];
+
+      const visitsEl = document.getElementById('statVisits');
+      const playersEl = document.getElementById('statPlayers');
+      const likesEl = document.getElementById('statLikes');
+
+      if (info && visitsEl) visitsEl.dataset.count = info.visits;
+      if (info && playersEl) playersEl.dataset.count = info.playing;
+      if (votes && likesEl) likesEl.dataset.count = votes.upVotes;
+    } catch (err) {
+      console.warn('Could not load live Zeramon stats, showing fallback numbers.', err);
+    }
+  }
+  fetchGameStats();
+
   // Count-up stats
   const stats = document.querySelectorAll('.stat .num');
   let counted = false;
